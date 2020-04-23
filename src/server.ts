@@ -1,9 +1,9 @@
 import Koa from "koa";
 import { ApolloServer } from "apollo-server-koa";
 import { buildSchema } from "type-graphql";
-import 'reflect-metadata';
+import "reflect-metadata";
 
-import UserResolver from "./models/User";
+import UserResolver from "./resolvers/UserResolver";
 
 const schema = buildSchema({
   resolvers: [UserResolver],

@@ -26,14 +26,14 @@
   },
   "homepage": "https://github.com/zhao943018529/BlogServer#readme",
   "dependencies": {
+    "@typegoose/typegoose": "^7.0.0",
     "@types/graphql": "^14.5.0",
     "@types/mongoose": "^5.7.12",
     "graphql": "^14.1.1",
     "koa": "^2.11.0",
     "mongoose": "^5.9.10",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^0.17.6",
-    "typegoose": "^5.9.1"
+    "type-graphql": "^0.17.6"
   },
   "devDependencies": {
     "@types/koa": "^2.11.3",
