@@ -27,15 +27,22 @@
   "homepage": "https://github.com/zhao943018529/BlogServer#readme",
   "dependencies": {
     "@types/graphql": "^14.5.0",
-    "@types/koa": "^2.11.3",
-    "graphql": "^15.0.0",
+    "@types/mongoose": "^5.7.12",
+    "graphql": "^14.1.1",
     "koa": "^2.11.0",
+    "mongoose": "^5.9.10",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^0.17.6"
+    "type-graphql": "^0.17.6",
+    "typegoose": "^5.9.1"
   },
   "devDependencies": {
+    "@types/koa": "^2.11.3",
+    "@types/koa-json": "^2.0.18",
+    "@types/koa-router": "^7.4.0",
+    "@types/node": "^13.13.2",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
+    "apollo-server-koa": "^2.12.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-config-prettier": "^6.10.1",
