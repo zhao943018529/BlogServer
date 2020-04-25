@@ -4,9 +4,13 @@ import { ObjectId } from "mongodb";
 
 @ObjectType()
 export class User {
-  @Field()
-  @Property()
+  @Property({ _id: true })
   readonly _id: String;
+
+  @Field((type) => String, { nullable: true })
+  public get id() {
+    return this._id;
+  }
 
   @Field((type) => String)
   @Property({ required: true })
