@@ -3,15 +3,27 @@ import { InputType, Field } from "type-graphql";
 
 @InputType({ description: "New user data" })
 export class AddUserInput implements Partial<User> {
-  @Field({ nullable: true })
-  _id?: String;
+  @Field()
+  firstName: String;
 
   @Field()
-  name: String;
+  lastName: String;
 
   @Field()
-  age: Number;
+  username: String;
+
+  @Field()
+  password: String;
+
+  @Field()
+  phone: String;
 
   @Field({ nullable: true })
-  description?: String;
+  birthday: Date;
+
+  @Field((type) => Date, { nullable: true })
+  updateTime?: Date;
+
+  @Field((type) => Date, { nullable: true })
+  createTime: Date;
 }

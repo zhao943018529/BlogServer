@@ -1,28 +1,43 @@
-import { ObjectType, Field, Arg } from "type-graphql";
+import { ObjectType, Field, Arg, ID } from "type-graphql";
 import { prop as Property, getModelForClass } from "@typegoose/typegoose";
 import { ObjectId } from "mongodb";
 
 @ObjectType()
 export class User {
-  @Property({ _id: true })
-  readonly _id: String;
-
-  @Field((type) => String, { nullable: true })
-  public get id() {
-    return this._id;
-  }
+  @Field((type) => ID)
+  readonly id: String;
 
   @Field((type) => String)
   @Property({ required: true })
-  name: String;
+  firstName: String;
 
-  @Field((type) => Number)
-  @Property({ max: 100, min: 0, default: 0 })
-  age: Number;
+  @Field((type) => String)
+  @Property({ required: true })
+  lastName: String;
 
-  @Field((type) => String, { nullable: true })
-  @Property({ default: "" })
-  description?: String;
+  @Field((type) => String)
+  @Property({ required: true, unique: true })
+  username: String;
+
+  @Field((type) => String)
+  @Property({ required: true })
+  password: String;
+
+  @Field((type) => String)
+  @Property({ required: true })
+  phone: String;
+
+  @Field((type) => Date, { nullable: true })
+  @Property()
+  birthday?: Date;
+
+  @Field((type) => Date, { nullable: true })
+  @Property()
+  updateTime?: Date;
+
+  @Field((type) => Date)
+  @Property({ default: Date.now() })
+  createTime: Date;
 }
 
 export const UserModel = getModelForClass(User);

@@ -1,21 +1,22 @@
 {
+  "compileOnSave": true,
   "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
     "target": "es6",
-    "noImplicitAny": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
+    "module": "commonjs",
+    "allowJs": true,
     "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*", "src/types/*"]
-    },
-    // for type-graphql
+    "rootDir": "./",
+    "isolatedModules": true,
+    "strictPropertyInitialization": false,
+    "strict": true,
+    "moduleResolution": "node",
+    "baseUrl": "./",
     "lib": ["es2016", "esnext.asynciterable"],
+    "typeRoots": ["node_modules/@types", "src/typings"],
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["node_modules", "__test__/**/*"]
 }
