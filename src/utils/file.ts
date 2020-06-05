@@ -1,18 +1,20 @@
 import { createWriteStream, unlink } from 'fs';
-import { uniqueId } from 'lodash';
+import Path from 'path';
 import { FileUpload } from 'graphql-upload';
-// import { FileUpload } from 'graphql-upload';
+import { v4 as uuidv4 } from 'uuid';
 
 const UPLOAD_DIR = '../../upload';
 
 export default async function upload(file: FileUpload) {
   const { createReadStream, filename, mimetype } = file;
-  const newFilename = `${uniqueId('fff')}-${filename}`;
+  let newFilename = uuidv4();
+  if (filename.indexOf('.') !== -1) {
+    newFilename = `${newFilename}.${filename.split('.').pop()}`;
+  }
   const path = `${UPLOAD_DIR}/${newFilename}`;
   const readStream = createReadStream();
-
   await new Promise(function (resolve, reject) {
-    const writeStream = createWriteStream(path);
+    const writeStream = createWriteStream(Path.resolve(__dirname, path));
     writeStream.on('finish', resolve);
     writeStream.on('error', (error) => {
       unlink(path, () => {
@@ -26,6 +28,6 @@ export default async function upload(file: FileUpload) {
   return {
     mimetype,
     filename: newFilename,
-    path: `/upload/${newFilename}`,
+    path: `/${newFilename}`,
   };
 }

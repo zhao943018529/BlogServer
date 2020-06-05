@@ -19,8 +19,8 @@ class FileResponse {
   code: Number;
   @Field()
   success: Boolean;
-  @Field()
-  message: String;
+  @Field({ nullable: true })
+  message?: String;
   @Field()
   data: String;
 }

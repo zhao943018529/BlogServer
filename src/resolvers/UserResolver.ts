@@ -5,9 +5,12 @@ import {
   Arg,
   Field,
   ObjectType,
+  Ctx,
 } from 'type-graphql';
 import { User, UserModel } from '../models/User';
 import { AddUserInput } from './types/InputTypes';
+// import { Context } from 'src/typings';
+import { GraphQLContext } from '../typings';
 
 @ObjectType()
 class UserResponse {
@@ -45,6 +48,18 @@ export default class UserResolver {
     const user = await UserModel.findOne({ _id: id });
 
     return user;
+  }
+
+  @Query((returns) => User)
+  async getUserInfo(@Ctx() ctx: GraphQLContext) {
+    if (ctx.user != null) {
+      const user = await UserModel.findOne({ _id: ctx.user.id });
+
+      return user;
+    } else {
+      ctx.ctx.status = 401;
+      return null;
+    }
   }
 
   @Mutation((returns) => UserResponse)
