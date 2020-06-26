@@ -12,8 +12,8 @@ router.post('/login', async (ctx) => {
   });
   ctx.status = 200;
   if (user != null) {
-    const token = jwt.sign({ ...user }, (ctx as any).secret, {
-      expiresIn: 60,
+    const token = jwt.sign(user.toObject(), (ctx as any).secret, {
+      expiresIn: 60 * 1000,
     });
     ctx.body = {
       code: 200,

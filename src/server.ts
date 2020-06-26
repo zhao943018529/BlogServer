@@ -2,7 +2,7 @@ import Koa from 'koa';
 import serve from 'koa-static';
 import { ApolloServer } from 'apollo-server-koa';
 import { graphqlUploadKoa } from 'graphql-upload';
-import { buildSchema } from 'type-graphql';
+import { buildSchema, AuthChecker } from 'type-graphql';
 import bodyParser from 'koa-bodyparser';
 import jwt from 'koa-jwt';
 import 'reflect-metadata';
@@ -10,13 +10,38 @@ import Path from 'path';
 import './db/index';
 import UserResolver from './resolvers/UserResolver';
 import FileResolver from './resolvers/FileResolver';
+import ArticleResolver from './resolvers/ArticleResolver';
+import TagResolver from './resolvers/TagResolver';
+import RdoleResolver from './resolvers/RoleResolver';
 import UserMiddleware from './middlewares/user';
 import UserRouter from './routes/user';
+import cors from '@koa/cors';
 import { secret } from './env';
+import { GraphQLContext } from './typings';
+import _ from 'lodash';
 // import File from './models/File';
 
+const customAuthChecker: AuthChecker<GraphQLContext> = (
+  { root, args, context, info },
+  roles
+) => {
+  const userRoles = context.user.roles.map((role) => role.title);
+  const permission = _.some(userRoles, (role) => roles.indexOf(role) > -1);
+  if (!permission) {
+    context.ctx.status = 403;
+  }
+  return permission;
+};
+
 buildSchema({
-  resolvers: [UserResolver, FileResolver],
+  resolvers: [
+    UserResolver,
+    FileResolver,
+    TagResolver,
+    ArticleResolver,
+    RdoleResolver,
+  ],
+  authChecker: customAuthChecker,
 }).then((schema) => {
   const server = new ApolloServer({
     schema,
@@ -65,7 +90,7 @@ buildSchema({
     // },
     uploads: false,
     context: ({ ctx }) => {
-      return { ctx, user: ctx.req.user, test: '12345678' };
+      return { ctx, user: ctx.request.user, test: '12345678' };
     },
     // {
     //   // Limits here should be stricter than config for surrounding
@@ -79,28 +104,23 @@ buildSchema({
   const app = new Koa();
   app.context.secret = secret;
   // console.log(Path.resolve(__dirname, '../upload'));
-  app.use(bodyParser());
-  app.use(
-    jwt({
-      secret: secret,
-      passthrough: true,
-      getToken: (ctx, bb) => {
-        return 'aaa';
-      },
-      // isRevoked: (ctx, a, b) => {
-      //   console.log(ctx);
-      //   return Promise.resolve(true);
-      // },
-    }).unless({
-      path: [/^\/login/, /^\/test/],
-    })
-  );
   app
+    .use(cors())
     .use(serve(Path.resolve(__dirname, '../upload')))
-    .use(graphqlUploadKoa({ maxFileSize: 10000000, maxFiles: 10 }));
-  app.use(UserMiddleware);
-  app.use(UserRouter.routes());
-  server.applyMiddleware({ app });
+    .use(
+      jwt({
+        secret: secret,
+        passthrough: true,
+        // isRevoked: (ctx, a, b) => {
+        //   console.log(ctx);
+        //   return Promise.resolve(true);
+        // },
+      }).unless({
+        path: [/^\/login/, /^\/.+\.(png|jpg|jpeg)$/],
+      })
+    )
+    .use(graphqlUploadKoa({ maxFileSize: 10000000, maxFiles: 10 }))
+    .use(bodyParser());
   app.use((ctx, next) => {
     return next().catch((err) => {
       if (err.status === 401) {
@@ -113,6 +133,9 @@ buildSchema({
       }
     });
   });
+  app.use(UserMiddleware);
+  app.use(UserRouter.routes());
+  server.applyMiddleware({ app });
 
   // app.use(async (ctx) => {
   //   ctx.body = 'Hello,world!!!';

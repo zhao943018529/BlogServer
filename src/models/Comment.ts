@@ -19,15 +19,23 @@ export class Comment {
 
   @Field((type) => User)
   @Property({ required: true })
-  user: Ref<User>;
+  author: Ref<User>;
 
-  @Field((type) => Comment, { nullable: true })
-  @Property({ ref: this })
-  parent?: this;
+  @Field((type) => String)
+  @Property({})
+  article?: string;
+
+  @Field((type) => User)
+  @Property({ ref: User })
+  replyTo?: User;
+
+  @Field((type) => String, { nullable: true })
+  @Property({})
+  root?: string;
 
   @Field((type) => Date)
-  @Property({ required: true })
-  createTime: Date;
+  @Property({ default: Date.now() })
+  createTime?: Date;
 }
 
 export const CommentModel = getModelForClass(Comment);

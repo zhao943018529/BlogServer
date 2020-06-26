@@ -1,31 +1,48 @@
 import { ObjectType, Field, Arg, ID } from 'type-graphql';
-import { prop as Property, getModelForClass } from '@typegoose/typegoose';
+import {
+  prop as Property,
+  getModelForClass,
+  arrayProp,
+  modelOptions,
+  mongoose,
+} from '@typegoose/typegoose';
 import { ObjectId } from 'mongodb';
+import { Ref } from './types';
+import { Role } from './Role';
 
 @ObjectType()
+@modelOptions({
+  schemaOptions: {
+    toObject: { virtuals: true },
+  },
+})
 export class User {
-  @Field((type) => ID)
-  readonly id: String;
+  @Field((type) => String)
+  readonly id: string;
 
   @Field((type) => String)
   @Property({ required: true })
-  firstName: String;
+  firstName: string;
 
   @Field((type) => String)
   @Property({ required: true })
-  lastName: String;
+  lastName: string;
 
   @Field((type) => String)
   @Property({ required: true, unique: true })
-  username: String;
+  username: string;
 
   @Field((type) => String)
   @Property({ required: true })
-  password: String;
+  password: string;
 
   @Field((type) => String)
   @Property({ required: true })
-  phone: String;
+  phone: string;
+
+  @Field((type) => [Role], { nullable: true })
+  @arrayProp({ ref: Role, refType: mongoose.Schema.Types.ObjectId })
+  roles?: Ref<Role>[];
 
   @Field((type) => Date, { nullable: true })
   @Property()
@@ -39,7 +56,7 @@ export class User {
   @Property({ default: Date.now() })
   createTime: Date;
 
-  @Field()
+  @Field((type) => String)
   public get fullName() {
     return `${this.firstName} ${this.lastName}`;
   }

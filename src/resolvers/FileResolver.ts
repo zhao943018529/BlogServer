@@ -5,24 +5,24 @@ import {
   Arg,
   Field,
   ObjectType,
-  InputType,
 } from 'type-graphql';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import MyFile from '../models/File';
-import { ReadStream } from 'fs';
-import File from '../models/File';
 import upload from '../utils/file';
 
 @ObjectType()
 class FileResponse {
   @Field()
-  code: Number;
+  code: number;
+
   @Field()
-  success: Boolean;
+  success: boolean;
+
   @Field({ nullable: true })
-  message?: String;
+  message?: string;
+
   @Field()
-  data: String;
+  data: string;
 }
 
 // @InputType()

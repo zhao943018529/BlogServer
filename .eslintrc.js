@@ -21,6 +21,7 @@ module.exports = {
     'no-unused-vars': 'off',
     'prettier/prettier': 'error',
     'max-classes-per-file': ['error', 5],
+    'class-methods-use-this': 'off',
     'import/extensions': [
       'error',
       'ignorePackages',

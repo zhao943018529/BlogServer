@@ -3,6 +3,7 @@ import {
   prop as Property,
   getModelForClass,
   arrayProp,
+  mongoose,
 } from '@typegoose/typegoose';
 // import { ObjectId } from 'mongodb';
 import { Ref } from './types';
@@ -13,34 +14,34 @@ import { Comment } from './Comment';
 @ObjectType()
 export class Article {
   @Field((type) => ID)
-  readonly id: String;
+  readonly id: string;
 
   @Field((type) => String)
   @Property({ required: true })
-  title: String;
+  title: string;
 
   @Field((type) => String)
   @Property({ required: true })
-  content: String;
+  content: string;
 
   @Field((type) => [Tag])
-  @arrayProp({ items: Tag })
+  @arrayProp({ ref: Tag, refType: mongoose.Schema.Types.ObjectId })
   tags: Ref<Tag>[];
 
   @Field((type) => User)
-  @Property({ ref: User, required: true })
+  @Property({
+    ref: User,
+    required: true,
+    refType: mongoose.Schema.Types.ObjectId,
+  })
   author: Ref<User>;
 
-  @Field((type) => Comment, { nullable: true })
-  @Property({ ref: Comment })
-  comment?: Ref<Comment>;
-
   @Field((type) => Date)
-  @Property({})
+  @Property({ default: Date.now })
   createTime: Date;
 
   @Field((type) => Date)
-  @Property({})
+  @Property({ default: Date.now })
   updateTime: Date;
 }
 
