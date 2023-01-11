@@ -43,7 +43,7 @@
         "@types/mongoose": "^5.7.12",
         "@types/uuid": "^8.0.0",
         "apollo-server-koa": "^2.13.1",
-        "class-validator": "^0.12.2",
+        "class-validator": "^0.14.0",
         "graphql": "^15.0.0",
         "graphql-upload": "^10.0.0",
         "jsonwebtoken": "^8.5.1",
